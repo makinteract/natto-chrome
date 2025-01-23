@@ -39,10 +39,16 @@
 
   function modifyText(command) {
     return async function () {
-      let { text } = await sendMessageToContent({
+      const selection = await sendMessageToContent({
         action: 'get_selected_text',
       });
 
+      if (!selection) {
+        toast.setMessage('No text selected', false);
+        return;
+      }
+
+      let { text } = selection;
       try {
         if (command == 'fix_grammar') {
           processing = true;

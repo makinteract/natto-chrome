@@ -1,8 +1,9 @@
 {
   "manifest_version": 3,
-  "name": "PCS Chair Controller",
+  "name": "Natto",
+  "description": "Supercharge your writing with AI: summarize, rewrite, translate, and elaborate any text.",
   "version": "0.1.0",
-  "description": "Chrome extension for controlling PCSChair",
+  "author": "makinteract",
   "icons": {
     "16": "assets/icon.png",
     "48": "assets/icon.png",
@@ -13,7 +14,6 @@
     "default_title": "PCS Chair Controller",
     "default_popup": "view/dist/index.html"
   },
-  "author": "make::lab",
   "background": {
     "service_worker": "background.js"
   },
