@@ -21,7 +21,7 @@
 </script>
 
 {#if visible}
-  <div transition:fade class="toast toast-top toast-end">
+  <div transition:fade class="toast toast-end">
     <div class="alert text-wrap {successAlert ? 'alert-info' : 'alert-error'}">
       <span>{message}</span>
     </div>

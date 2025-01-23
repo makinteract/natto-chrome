@@ -1,6 +1,13 @@
 <script>
+  import { onMount } from 'svelte';
+
   import Buttongroup from './components/buttongroup.svelte';
+  import Header from './components/header.svelte';
   import Navi from './components/navi.svelte';
+  import Select from './components/select.svelte';
+  import Input from './components/input.svelte';
+  import Toast from './components/toast.svelte';
+
   import {
     sendMessageToContent,
     getFromLocalStorage,
@@ -9,14 +16,11 @@
     rewrite,
     summarize,
     translate,
+    setBadge,
   } from './utils';
-  import Header from './components/header.svelte';
   import { slide } from 'svelte/transition';
-  import Select from './components/select.svelte';
+
   import languages from './languages';
-  import Input from './components/input.svelte';
-  import { onMount } from 'svelte';
-  import Toast from './components/toast.svelte';
 
   let home = true; // false is option screen
   const ANIMATION_DURATION = 400; // animation between screens
@@ -24,14 +28,13 @@
   let model = 'gpt-4o-mini'; // default model
   let apikey = 'sk-proj-TrU-RWW...';
   let toast;
+  let processing = false;
 
   onMount(async () => {
     apikey = (await getFromLocalStorage('natto_apikey')) ?? apikey;
     model = (await getFromLocalStorage('natto_model')) ?? model;
     language =
       (await getFromLocalStorage('natto_translation_language')) ?? language;
-
-    console.log('apikey', apikey);
   });
 
   function modifyText(command) {
@@ -42,14 +45,19 @@
 
       try {
         if (command == 'fix_grammar') {
+          processing = true;
           text = await fixGrammar(apikey, model, text);
         } else if (command == 'elaborate') {
+          processing = true;
           text = await elaborate(apikey, model, text);
         } else if (command == 'rewrite') {
+          processing = true;
           text = await rewrite(apikey, model, text);
         } else if (command == 'summarize') {
+          processing = true;
           text = await summarize(apikey, model, text);
         } else if (command == 'translate') {
+          processing = true;
           text = await translate(apikey, model, text, language);
         } else throw new Error('Unable to perform this action');
       } catch (e) {
@@ -62,6 +70,7 @@
         text,
       });
       toast.setMessage('Done', true);
+      processing = false;
     };
   }
 
@@ -81,7 +90,7 @@
 
 <div class="bg-base-100 ml-4 mr-4 w-80 h-96">
   <div class="mb-6">
-    <Header />
+    <Header {processing} />
   </div>
 
   {#if home}

@@ -1,19 +1,5 @@
 import { getPrompt, getMessage } from '@makinteract/openai-chains';
 
-export async function setBadge({ text, color }) {
-  const tabId = await getTabId();
-  if (!tabId) return;
-  chrome.action.setBadgeBackgroundColor({ color });
-  chrome.action.setBadgeText({
-    tabId,
-    text,
-  });
-}
-
-export function resetBadge() {
-  setBadge({ text: '', color: '#000' });
-}
-
 export async function getActiveTab() {
   const [tab] = await chrome.tabs.query({
     active: true,
@@ -43,6 +29,20 @@ export async function getURL() {
   return tab.url;
 }
 
+export async function setBadge({ text, color }) {
+  const tabId = await getTabId();
+  if (!tabId) return;
+  chrome.action.setBadgeBackgroundColor({ color });
+  chrome.action.setBadgeText({
+    tabId,
+    text,
+  });
+}
+
+export function resetBadge() {
+  setBadge({ text: '', color: '#000' });
+}
+
 export function getFromLocalStorage(key: string) {
   return new Promise((resolve, _rej) => {
     chrome.storage.local.get(key, async (entry) => {
@@ -52,6 +52,7 @@ export function getFromLocalStorage(key: string) {
   });
 }
 
+// API calls
 export async function fixGrammar(apiKey: string, model: string, text: string) {
   const prompt = await getPrompt({ model, apiKey });
   const response = await prompt(`
