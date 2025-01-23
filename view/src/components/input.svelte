@@ -9,7 +9,7 @@
   </div>
   <input
     bind:value
-    type="text"
+    type="password"
     placeholder={value}
     class="input input-bordered"
     on:change

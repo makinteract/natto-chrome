@@ -1,7 +1,15 @@
 <script>
   import Buttongroup from './components/buttongroup.svelte';
   import Navi from './components/navi.svelte';
-  import { sendMessageToContent, getFromLocalStorage } from './utils';
+  import {
+    sendMessageToContent,
+    getFromLocalStorage,
+    fixGrammar,
+    elaborate,
+    rewrite,
+    summarize,
+    translate,
+  } from './utils';
   import Header from './components/header.svelte';
   import { slide } from 'svelte/transition';
   import Select from './components/select.svelte';
@@ -18,9 +26,12 @@
   let toast;
 
   onMount(async () => {
-    apikey = getFromLocalStorage('natto_apikey') ?? apikey;
-    model = getFromLocalStorage('natto_model') ?? model;
-    language = getFromLocalStorage('natto_translation_language') ?? language;
+    apikey = (await getFromLocalStorage('natto_apikey')) ?? apikey;
+    model = (await getFromLocalStorage('natto_model')) ?? model;
+    language =
+      (await getFromLocalStorage('natto_translation_language')) ?? language;
+
+    console.log('apikey', apikey);
   });
 
   function modifyText(command) {
@@ -29,14 +40,28 @@
         action: 'get_selected_text',
       });
 
-      if (command == 'fix_grammar') text = text.toUpperCase();
-
+      try {
+        if (command == 'fix_grammar') {
+          text = await fixGrammar(apikey, model, text);
+        } else if (command == 'elaborate') {
+          text = await elaborate(apikey, model, text);
+        } else if (command == 'rewrite') {
+          text = await rewrite(apikey, model, text);
+        } else if (command == 'summarize') {
+          text = await summarize(apikey, model, text);
+        } else if (command == 'translate') {
+          text = await translate(apikey, model, text, language);
+        } else throw new Error('Unable to perform this action');
+      } catch (e) {
+        toast.setMessage(e.substring(0, 40) + '...', false);
+        return;
+      }
+      // Finalize the text
       await sendMessageToContent({
         action: 'replace_selected_text',
         text,
       });
-
-      toast.setMessage('Fixed grammar!!', true);
+      toast.setMessage('Done', true);
     };
   }
 
@@ -50,6 +75,7 @@
 
   async function updateAPIkey(event) {
     await chrome.storage.local.set({ natto_apikey: apikey });
+    toast.setMessage('Updated', true);
   }
 </script>
 
@@ -69,7 +95,7 @@
         on:rewrite={modifyText('rewrite')}
         on:summarize={modifyText('summarize')}
         on:translate={modifyText('translate')}
-        language="Korean"
+        {language}
       />
     </div>
   {:else}

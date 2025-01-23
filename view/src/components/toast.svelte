@@ -4,9 +4,13 @@
   let message = '';
   let visible = false;
   let successAlert = true;
+  const maxLen = 40;
 
   export function setMessage(newMessage, success) {
-    message = newMessage;
+    message =
+      newMessage.length > maxLen
+        ? newMessage.slice(0, maxLen) + '...'
+        : newMessage;
     visible = true;
     successAlert = success;
 
@@ -18,7 +22,7 @@
 
 {#if visible}
   <div transition:fade class="toast toast-top toast-end">
-    <div class="alert {successAlert ? 'alert-info' : 'alert-error'}">
+    <div class="alert text-wrap {successAlert ? 'alert-info' : 'alert-error'}">
       <span>{message}</span>
     </div>
   </div>
