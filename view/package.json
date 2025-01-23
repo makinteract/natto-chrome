@@ -7,7 +7,6 @@
   "devDependencies": {
     "@sveltejs/vite-plugin-svelte": "^2",
     "@tailwindcss/typography": "^0.5.16",
-    "@types/chrome": "^0.0.299",
     "autoprefixer": "^10",
     "daisyui": "^3",
     "postcss": "^8",

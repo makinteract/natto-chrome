@@ -1,49 +1,54 @@
-<script lang="ts">
+<script>
   import Buttongroup from './components/buttongroup.svelte';
   import Navi from './components/navi.svelte';
-  import { sendMessageToContent } from './utils';
+  import { sendMessageToContent, getFromLocalStorage } from './utils';
   import Header from './components/header.svelte';
   import { slide } from 'svelte/transition';
   import Select from './components/select.svelte';
   import languages from './languages';
   import Input from './components/input.svelte';
   import { onMount } from 'svelte';
+  import Toast from './components/toast.svelte';
 
   let home = true; // false is option screen
+  const ANIMATION_DURATION = 400; // animation between screens
   let language = 'English'; // default language
   let model = 'gpt-4o-mini'; // default model
   let apikey = 'sk-proj-TrU-RWW...';
-  const ANIMATION_DURATION = 400;
+  let toast;
 
   onMount(async () => {
-    chrome.storage.local.get('natto_apikey', async (result) => {
-      apikey = result.natto_apikey;
-    });
-    chrome.storage.local.get('natto_model', async (result) => {
-      model = result.natto_model ?? model;
-    });
-    chrome.storage.local.get('natto_translation_language', async (result) => {
-      language = result.natto_translation_language ?? language;
-    });
+    apikey = getFromLocalStorage('natto_apikey') ?? apikey;
+    model = getFromLocalStorage('natto_model') ?? model;
+    language = getFromLocalStorage('natto_translation_language') ?? language;
   });
 
-  function abc() {
-    console.log('abc');
-    sendMessageToContent({ action: 'fix_grammar' });
+  function modifyText(command) {
+    return async function () {
+      let { text } = await sendMessageToContent({
+        action: 'get_selected_text',
+      });
+
+      if (command == 'fix_grammar') text = text.toUpperCase();
+
+      await sendMessageToContent({
+        action: 'replace_selected_text',
+        text,
+      });
+
+      toast.setMessage('Fixed grammar!!', true);
+    };
   }
 
   async function updateModel(event) {
-    console.log(event.target.value, model);
     await chrome.storage.local.set({ natto_model: model });
   }
 
   async function updateLanguage(event) {
-    console.log(event.target.value, language);
     await chrome.storage.local.set({ natto_translation_language: language });
   }
 
   async function updateAPIkey(event) {
-    console.log(event.target.value, apikey);
     await chrome.storage.local.set({ natto_apikey: apikey });
   }
 </script>
@@ -59,11 +64,11 @@
       in:slide={{ axis: 'x', duration: ANIMATION_DURATION }}
     >
       <Buttongroup
-        on:grammar={abc}
-        on:elaborate={abc}
-        on:rewrite={abc}
-        on:summarize={abc}
-        on:translate={abc}
+        on:grammar={modifyText('fix_grammar')}
+        on:elaborate={modifyText('elaborate')}
+        on:rewrite={modifyText('rewrite')}
+        on:summarize={modifyText('summarize')}
+        on:translate={modifyText('translate')}
         language="Korean"
       />
     </div>
@@ -100,3 +105,5 @@
   {/if}
   <Navi on:home={() => (home = true)} on:options={() => (home = false)} />
 </div>
+
+<Toast bind:this={toast} />
