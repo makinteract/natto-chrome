@@ -13,15 +13,30 @@ async function getTabId() {
   return tab.id;
 }
 
+// export async function sendMessageToContent(message: Object) {
+//   // Promisify the call
+//   const tabId = await getTabId();
+//   if (!tabId) return;
+//   return new Promise((resolve, reject) => {
+//     chrome.tabs.sendMessage(tabId, message, function (response) {
+//       resolve(response);
+//     });
+//   });
+// }
+
 export async function sendMessageToContent(message: Object) {
-  // Promisify the call
   const tabId = await getTabId();
   if (!tabId) return;
-  return new Promise((resolve, reject) => {
-    chrome.tabs.sendMessage(tabId, message, function (response) {
-      resolve(response);
+  let frames = await chrome.webNavigation.getAllFrames({ tabId: tabId });
+  let promises: any[] = [];
+  frames?.forEach((f) => {
+    let promise = chrome.tabs.sendMessage(tabId, message, {
+      frameId: f.frameId,
     });
+    promises.push(promise);
   });
+
+  return Promise.all(promises);
 }
 
 export async function getURL() {

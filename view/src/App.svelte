@@ -42,9 +42,12 @@
 
   function modifyText(command) {
     return async function () {
-      const selection = await sendMessageToContent({
+      const selections = await sendMessageToContent({
         action: 'get_selected_text',
       });
+
+      // Pick one of the possible selections
+      const selection = selections.find(({ text }) => text.length > 0);
 
       if (!selection || !selection.text) {
         toast.setMessage('No text selected', false);
