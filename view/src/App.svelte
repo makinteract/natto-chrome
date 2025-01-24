@@ -52,28 +52,26 @@
       }
 
       let { text } = selection;
+      processing = true;
 
       try {
         if (command == 'fix_grammar') {
-          processing = true;
           text = await fixGrammar(apikey, model, text);
         } else if (command == 'elaborate') {
-          processing = true;
           text = await elaborate(apikey, model, text);
         } else if (command == 'rewrite') {
-          processing = true;
           text = await rewrite(apikey, model, text);
         } else if (command == 'summarize') {
-          processing = true;
           text = await summarize(apikey, model, text);
         } else if (command == 'translate') {
-          processing = true;
           text = await translate(apikey, model, text, language);
         } else throw new Error('Unable to perform this action');
       } catch (e) {
         toast.setMessage(e.substring(0, 40) + '...', false);
+        processing = false;
         return;
       }
+
       // Finalize the text
       await sendMessageToContent({
         action: 'replace_selected_text',

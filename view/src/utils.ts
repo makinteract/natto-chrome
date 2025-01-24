@@ -17,7 +17,7 @@ export async function sendMessageToContent(message: Object) {
   // Promisify the call
   const tabId = await getTabId();
   if (!tabId) return;
-  return new Promise((resolve, _) => {
+  return new Promise((resolve, reject) => {
     chrome.tabs.sendMessage(tabId, message, function (response) {
       resolve(response);
     });
