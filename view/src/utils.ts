@@ -71,12 +71,16 @@ export function getFromLocalStorage(key: string) {
 export async function fixGrammar(apiKey: string, model: string, text: string) {
   const prompt = await getPrompt({ model, apiKey });
   const response = await prompt(`
-        Fix the typos, punctuation and lettercase of this text. Keep the same language. 
+        Fix the typos, punctuation and lettercase of this text. 
+        Keep the same language, tone and style. 
         Do not add any text that is not there. 
         If the sentence is already correct, just leave it.
         If the sentence cannot be fixed, just leave it as it is.
         If no text is provided, just leave it as it is.
-        
+        Do not provide explanations or comments.
+        Output the code as HTML, with corresponding tags for each element to maintain the original formatting,
+        but do not add any additional formatting such as markdown, and do not write something like "Here the text" or do not use markings to indicate the HTML code is starting.
+
         Here the text:${text}`).then(getMessage);
   return response.content;
 }
@@ -88,6 +92,8 @@ export async function elaborate(apiKey: string, model: string, text: string) {
         Expand on the ideas, but keep the length of the final text similar in length to the input of the text below.
         Keep the same language.
         If no text is provided, just leave it as it is.
+        Output the code as HTML, with corresponding tags for each element to maintain the original formatting,
+        but do not add any additional formatting such as markdown, and do not write something like "Here the text" or do not use markings to indicate the HTML code is starting.
 
         Here the text:${text}`).then(getMessage);
   return response.content;
@@ -98,6 +104,8 @@ export async function rewrite(apiKey: string, model: string, text: string) {
   const response = await prompt(`
         Paraphrase this text. Rewrite it with different words but keep the same length. 
         Keep the same language. If no text is provided, just leave it as it is.
+        Output the code as HTML, with corresponding tags for each element to maintain the original formatting,
+        but do not add any additional formatting such as markdown, and do not write something like "Here the text" or do not use markings to indicate the HTML code is starting.
 
         Here the text:${text}`).then(getMessage);
   return response.content;
@@ -108,6 +116,8 @@ export async function summarize(apiKey: string, model: string, text: string) {
   const response = await prompt(`
         Summarize the following text. Keep the same language.
         If no text is provided, just leave it as it is.
+        Output the code as HTML, with corresponding tags for each element to maintain the original formatting,
+        but do not add any additional formatting such as markdown, and do not write something like "Here the text" or do not use markings to indicate the HTML code is starting.
 
         Here the text:${text}`).then(getMessage);
   return response.content;
@@ -124,6 +134,8 @@ export async function translate(
       Translate the text in the ${language} language.
       Do not modify the text, its meaning or its tone.
       If no text is provided, just leave it as it is.
+      Output the code as HTML, with corresponding tags for each element to maintain the original formatting,
+      but do not add any additional formatting such as markdown, and do not write something like "Here the text" or do not use markings to indicate the HTML code is starting.
 
       Here the text:${text}`).then(getMessage);
   return response.content;

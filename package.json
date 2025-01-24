@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "scripts": {
     "build": "cd view && npm run build",
-    "package": "zip -r extension.zip assets/* view/dist/* manifest.json *.js"
+    "package": "zip -r natto-extension.zip assets/* view/dist/* manifest.json *.js"
   },
   "author": "",
   "license": "MIT",
