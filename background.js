@@ -17,10 +17,14 @@ chrome.runtime.onMessage.addListener(function (message, sender) {
       if (pastTabs.includes(tabId)) return;
       pastTabs.push(tabId);
       // Injecting
-      chrome.scripting.executeScript({
-        target: { tabId: tab.id, allFrames: true },
-        files: ['content.js'],
-      });
+      try {
+        chrome.scripting.executeScript({
+          target: { tabId: tab.id, allFrames: true },
+          files: ['content.js'],
+        });
+      } catch (e) {
+        console.log(e);
+      }
     }
   );
 });
