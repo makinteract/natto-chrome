@@ -4,7 +4,6 @@ chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
   // console.log('Message received', request);
   if (request.action === 'get_selected_text') {
     const selection = getSelectedText();
-    console.log('Selected text:', selection);
     sendResponse({ text: selection });
   } else if (request.action === 'replace_selected_text') {
     const text = request.text;
@@ -25,6 +24,8 @@ function getFromLocalStorage(key) {
 function replaceSelectedText(replacementText) {
   if (!window.getSelection) return '';
   const sel = window.getSelection();
+  const current = sel.toString();
+  if (!current) return;
   if (!sel || sel.rangeCount < 1) return '';
   const range = sel?.getRangeAt(0);
   range?.deleteContents();
