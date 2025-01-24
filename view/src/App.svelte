@@ -35,6 +35,9 @@
     model = (await getFromLocalStorage('natto_model')) ?? model;
     language =
       (await getFromLocalStorage('natto_translation_language')) ?? language;
+
+    // Send message to background to inject content script
+    chrome.runtime.sendMessage({ ready: true });
   });
 
   function modifyText(command) {
@@ -43,12 +46,13 @@
         action: 'get_selected_text',
       });
 
-      if (!selection) {
+      if (!selection || !selection.text) {
         toast.setMessage('No text selected', false);
         return;
       }
 
       let { text } = selection;
+
       try {
         if (command == 'fix_grammar') {
           processing = true;
