@@ -42,9 +42,17 @@
 
   function modifyText(command) {
     return async function () {
-      const selections = await sendMessageToContent({
-        action: 'get_selected_text',
-      });
+      let selections = [];
+      try {
+        selections = await sendMessageToContent({
+          action: 'get_selected_text',
+        });
+      } catch (e) {
+        toast.setMessage('Natto does not support this page.', false);
+        console.error(e);
+        processing = false;
+        return;
+      }
 
       // Pick one of the possible selections
       const selection = selections.find(({ text }) => text.length > 0);

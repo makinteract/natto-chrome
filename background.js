@@ -3,6 +3,7 @@
 const pastTabs = [];
 
 chrome.runtime.onMessage.addListener(function (message, sender) {
+  console.log('Message received', message);
   if (!message.ready) return;
 
   chrome.tabs.query(
@@ -12,19 +13,19 @@ chrome.runtime.onMessage.addListener(function (message, sender) {
     },
     async function (tabs) {
       const tab = tabs[0];
-      if (tab.url?.startsWith('chrome://')) return;
+      if (tab.url?.startsWith('chrome://extensions')) return;
       const tabId = tab.id;
       if (pastTabs.includes(tabId)) return;
       pastTabs.push(tabId);
+
       // Injecting
-      try {
-        chrome.scripting.executeScript({
+      chrome.scripting
+        .executeScript({
           target: { tabId: tab.id, allFrames: true },
           files: ['content.js'],
-        });
-      } catch (e) {
-        console.log(e);
-      }
+        })
+        .then(() => console.log('script injected in all frames'))
+        .catch((err) => console.log(err));
     }
   );
 });

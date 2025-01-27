@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
-  "name": "Natto",
-  "description": "Supercharge your writing with AI: summarize, rewrite, translate, and elaborate any text.",
+  "name": "Natto: Supercharge your writing with AI",
+  "description": "Supercharge your writing with AI 🚀 🤖: summarize, rewrite, translate, and elaborate any text.",
   "version": "0.1.0",
   "author": "makinteract",
   "icons": {

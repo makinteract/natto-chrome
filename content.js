@@ -1,6 +1,7 @@
 // Proceed from here
 
 chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
+  console.log('Message received', request);
   // console.log('Message received', request);
   if (request.action === 'get_selected_text') {
     const selection = getSelectedText();
@@ -9,6 +10,8 @@ chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
     const text = request.text;
     replaceSelectedText(text);
     sendResponse({ success: true });
+  } else {
+    sendResponse({ success: false });
   }
 });
 

@@ -35,7 +35,6 @@ export async function sendMessageToContent(message: Object) {
     });
     promises.push(promise);
   });
-
   return Promise.all(promises);
 }
 
