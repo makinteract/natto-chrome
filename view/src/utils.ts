@@ -90,6 +90,7 @@ export async function elaborate(apiKey: string, model: string, text: string) {
   const response = await prompt(`
         Elaborate on the following text with more details. Provide more background or information. 
         Expand on the ideas, but keep the length of the final text similar in length to the input of the text below.
+        If a list of bullet points is provided, expand on each point in a paragraph.
         Keep the same language.
         If no text is provided, just leave it as it is.
         Output the code as HTML, with corresponding tags for each element to maintain the original formatting,

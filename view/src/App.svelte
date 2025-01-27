@@ -87,15 +87,17 @@
 
   async function updateModel(event) {
     await chrome.storage.local.set({ natto_model: model });
+    toast.setMessage(`Updated model: ${model}`, true);
   }
 
   async function updateLanguage(event) {
     await chrome.storage.local.set({ natto_translation_language: language });
+    toast.setMessage(`Updated language: ${language}`, true);
   }
 
   async function updateAPIkey(event) {
     await chrome.storage.local.set({ natto_apikey: apikey });
-    toast.setMessage('Updated', true);
+    toast.setMessage(`Updated key: ${apikey.substring(0, 7)}...`, true);
   }
 </script>
 
