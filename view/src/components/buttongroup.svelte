@@ -27,9 +27,29 @@
         >Summarize</button
       >
     </div>
-    <div
+
+    <!-- <div
       class="text-secondary-content grid col-span-2 place-content-center rounded"
     >
+      <div class="indicator">
+        <span
+          class="indicator-item indicator-top indicator-right badge badge-secondary"
+          >{language}</span
+        >
+        <button
+          class="btn btn-accent w-32"
+          on:click={() => dispatch('translate')}>Translate to</button
+        >
+      </div>
+    </div> -->
+    <div class="text-secondary-content grid place-content-center rounded">
+      <button
+        class="btn btn-accent w-32"
+        on:click={() => dispatch('translate_english')}
+        >Translate to English</button
+      >
+    </div>
+    <div class="text-secondary-content grid place-content-center rounded">
       <div class="indicator">
         <span
           class="indicator-item indicator-top indicator-right badge badge-secondary"

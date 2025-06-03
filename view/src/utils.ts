@@ -77,9 +77,8 @@ export async function fixGrammar(apiKey: string, model: string, text: string) {
         If the sentence cannot be fixed, just leave it as it is.
         If no text is provided, just leave it as it is.
         Do not provide explanations or comments.
-        Output the code as HTML, with corresponding tags for each element to maintain the original formatting,
-        but do not add any additional formatting such as markdown, and do not write something like "Here the text" or do not use markings to indicate the HTML code is starting.
-
+        Output the text as a json object with the following keys: text, and html (which is the text with corresponding tags for each element to maintain the original formatting, but do not add any additional formatting such as markdown, and do not write something like "Here the text" or do not use markings to indicate the HTML code is starting).
+       
         Here the text:${text}`).then(getMessage);
   return response.content;
 }
@@ -87,13 +86,12 @@ export async function fixGrammar(apiKey: string, model: string, text: string) {
 export async function elaborate(apiKey: string, model: string, text: string) {
   const prompt = await getPrompt({ model, apiKey });
   const response = await prompt(`
-        Elaborate on the following text with more details. Provide more background or information. 
+        Elaborate on the following text with more details. Provide more background or information. The final text should be longer than the original text.
         Expand on the ideas, but keep the length of the final text similar in length to the input of the text below.
         If a list of bullet points is provided, expand on each point in a paragraph.
         Keep the same language.
         If no text is provided, just leave it as it is.
-        Output the code as HTML, with corresponding tags for each element to maintain the original formatting,
-        but do not add any additional formatting such as markdown, and do not write something like "Here the text" or do not use markings to indicate the HTML code is starting.
+        Output the text as a json object with the following keys: text, and html (which is the text with corresponding tags for each element to maintain the original formatting, but do not add any additional formatting such as markdown, and do not write something like "Here the text" or do not use markings to indicate the HTML code is starting).
 
         Here the text:${text}`).then(getMessage);
   return response.content;
@@ -104,8 +102,7 @@ export async function rewrite(apiKey: string, model: string, text: string) {
   const response = await prompt(`
         Paraphrase this text. Rewrite it with different words but keep the same length. 
         Keep the same language. If no text is provided, just leave it as it is.
-        Output the code as HTML, with corresponding tags for each element to maintain the original formatting,
-        but do not add any additional formatting such as markdown, and do not write something like "Here the text" or do not use markings to indicate the HTML code is starting.
+        Output the text as a json object with the following keys: text, and html (which is the text with corresponding tags for each element to maintain the original formatting, but do not add any additional formatting such as markdown, and do not write something like "Here the text" or do not use markings to indicate the HTML code is starting).
 
         Here the text:${text}`).then(getMessage);
   return response.content;
@@ -114,10 +111,9 @@ export async function rewrite(apiKey: string, model: string, text: string) {
 export async function summarize(apiKey: string, model: string, text: string) {
   const prompt = await getPrompt({ model, apiKey });
   const response = await prompt(`
-        Summarize the following text. Keep the same language.
+        Summarize the following text. Keep the same language but reduce the length of the text.
         If no text is provided, just leave it as it is.
-        Output the code as HTML, with corresponding tags for each element to maintain the original formatting,
-        but do not add any additional formatting such as markdown, and do not write something like "Here the text" or do not use markings to indicate the HTML code is starting.
+        Output the text as a json object with the following keys: text, and html (which is the text with corresponding tags for each element to maintain the original formatting, but do not add any additional formatting such as markdown, and do not write something like "Here the text" or do not use markings to indicate the HTML code is starting).
 
         Here the text:${text}`).then(getMessage);
   return response.content;
@@ -131,11 +127,10 @@ export async function translate(
 ) {
   const prompt = await getPrompt({ model, apiKey });
   const response = await prompt(`
-      Translate the text in the ${language} language.
+      Translate the text to the ${language} language.
       Do not modify the text, its meaning or its tone.
       If no text is provided, just leave it as it is.
-      Output the code as HTML, with corresponding tags for each element to maintain the original formatting,
-      but do not add any additional formatting such as markdown, and do not write something like "Here the text" or do not use markings to indicate the HTML code is starting.
+      Output the text as a json object with the following keys: text, and html (which is the text with corresponding tags for each element to maintain the original formatting, but do not add any additional formatting such as markdown, and do not write something like "Here the text" or do not use markings to indicate the HTML code is starting).
 
       Here the text:${text}`).then(getMessage);
   return response.content;

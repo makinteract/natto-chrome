@@ -62,33 +62,42 @@
         return;
       }
 
-      let { text } = selection;
+      let { text } = selection || { text: '' };
       processing = true;
 
       try {
         if (command == 'fix_grammar') {
-          text = await fixGrammar(apikey, model, text);
+          const temp = await fixGrammar(apikey, model, text);
+          navigator.clipboard.writeText(JSON.parse(temp).text);
         } else if (command == 'elaborate') {
-          text = await elaborate(apikey, model, text);
+          const temp = await elaborate(apikey, model, text);
+          navigator.clipboard.writeText(JSON.parse(temp).text);
         } else if (command == 'rewrite') {
-          text = await rewrite(apikey, model, text);
+          const temp = await rewrite(apikey, model, text);
+          navigator.clipboard.writeText(JSON.parse(temp).text);
         } else if (command == 'summarize') {
-          text = await summarize(apikey, model, text);
+          const temp = await summarize(apikey, model, text);
+          navigator.clipboard.writeText(JSON.parse(temp).text);
+        } else if (command == 'translate_english') {
+          const temp = await translate(apikey, model, text, 'English');
+          navigator.clipboard.writeText(JSON.parse(temp).text);
         } else if (command == 'translate') {
-          text = await translate(apikey, model, text, language);
+          const temp = await translate(apikey, model, text, language);
+          navigator.clipboard.writeText(JSON.parse(temp).text);
         } else throw new Error('Unable to perform this action');
       } catch (e) {
-        toast.setMessage(e.substring(0, 40) + '...', false);
+        toast.setMessage('Unable to perform this action', true);
         processing = false;
         return;
       }
 
       // Finalize the text
-      await sendMessageToContent({
-        action: 'replace_selected_text',
-        text,
-      });
-      toast.setMessage('Done', true);
+      // await sendMessageToContent({
+      //   action: 'replace_selected_text',
+      //   text,
+      // });
+
+      toast.setMessage('Copied to clipboard', true);
       processing = false;
     };
   }
@@ -124,6 +133,7 @@
         on:elaborate={modifyText('elaborate')}
         on:rewrite={modifyText('rewrite')}
         on:summarize={modifyText('summarize')}
+        on:translate_english={modifyText('translate_english')}
         on:translate={modifyText('translate')}
         {language}
       />

@@ -15,8 +15,8 @@ chrome.runtime.onMessage.addListener(function (message, sender) {
       const tab = tabs[0];
       if (tab.url?.startsWith('chrome://extensions')) return;
       const tabId = tab.id;
-      if (pastTabs.includes(tabId)) return;
-      pastTabs.push(tabId);
+      // if (pastTabs.includes(tabId)) return;
+      // pastTabs.push(tabId);
 
       // Injecting
       chrome.scripting
