@@ -86,7 +86,7 @@
           navigator.clipboard.writeText(JSON.parse(temp).text);
         } else throw new Error('Unable to perform this action');
       } catch (e) {
-        toast.setMessage('Unable to perform this action', true);
+        toast.setMessage(`${e || 'An error occurred'}`, false);
         processing = false;
         return;
       }

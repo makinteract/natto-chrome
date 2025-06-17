@@ -1,6 +1,6 @@
 {
   "name": "natto-chrome",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "scripts": {
     "build": "cd view && npm run build",
     "package": "zip -r natto-extension.zip assets/* view/dist/* manifest.json *.js"
