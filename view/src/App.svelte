@@ -155,7 +155,7 @@
         <div class="grid mt-4">
           <Select
             label="Pick a model"
-            options={['gpt-4o-mini', 'gpt-4o']}
+            options={['gpt-4o-mini', 'gpt-4o', 'gpt-4.1', 'gpt-4.1-mini']}
             bind:selection={model}
             on:change={updateModel}
           />
